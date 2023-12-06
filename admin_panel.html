@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warehouse Admin Panel</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      #itemForm,
+      #searchForm {
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 8px 12px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      #items {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      li button {
+        background-color: #e74c3c;
+        color: #fff;
+        border: none;
+        padding: 5px 8px;
+        margin-left: 10px;
+        border-radius: 4px;
+      }
+
+      li button:hover {
+        background-color: #c0392b;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="itemForm">
+      <!-- Form for adding a new item -->
+      <label for="itemName">Item Name:</label>
+      <input type="text" id="itemName" />
+      <label for="vendorCode">Vendor Code:</label>
+      <input type="text" id="vendorCode" />
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" min="0" value="0" />
+      <!-- Use type="number" for quantity -->
+      <!-- Add more input fields for other item properties -->
+      <button onclick="addItem()">Add Item</button>
+    </div>
+
+    <div id="itemList">
+      <!-- Display list of items with delete functionality -->
+      <ul id="items"></ul>
+    </div>
+
+    <div id="searchForm">
+      <!-- Form for searching items -->
+      <label for="searchTerm">Search Term:</label>
+      <input type="text" id="searchTerm" />
+      <button onclick="searchItem()">Search</button>
+    </div>
+
+    <script>
+      // Original array to store all items
+      const items = [];
+      // Array to store filtered items
+      let filteredItems = [];
+
+      function renderItems(displayItems) {
+        const itemList = document.getElementById('items');
+        itemList.innerHTML = '';
+
+        displayItems.forEach(item => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `
+            <strong>${item.name}</strong> -
+            Vendor Code: ${item.vendorCode} -
+            Location: ${item.location} -
+            Quantity: ${item.quantity} <!-- Display quantity -->
+          `;
+
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', () => deleteItem(item.id));
+
+          const changeLocationButton = document.createElement('button');
+          changeLocationButton.textContent = 'Change Location';
+          changeLocationButton.addEventListener('click', () =>
+            changeItemLocation(item.id)
+          );
+
+          const changeQuantityButton = document.createElement('button');
+          changeQuantityButton.textContent = 'Change Quantity';
+          changeQuantityButton.addEventListener('click', () =>
+            changeQuantity(item.id)
+          );
+
+          listItem.appendChild(deleteButton);
+          listItem.appendChild(changeLocationButton);
+          listItem.appendChild(changeQuantityButton);
+
+          itemList.appendChild(listItem);
+        });
+      }
+
+      function addItem() {
+        const itemName = document.getElementById('itemName').value;
+        const vendorCode = document.getElementById('vendorCode').value;
+        const quantity =
+          parseInt(document.getElementById('quantity').value) || 0; // Ensure a valid number
+
+        const newItem = {
+          id: Date.now(),
+          name: itemName,
+          vendorCode: vendorCode,
+          location: 'Default Location',
+          quantity: quantity,
+        };
+        items.push(newItem);
+
+        // Update filteredItems array when a new item is added
+        filteredItems.push(newItem);
+
+        // Render either all items or filtered items based on the current state
+        renderItems(filteredItems.length > 0 ? filteredItems : items);
+      }
+
+      function changeQuantity(itemId) {
+        const item = items.find(item => item.id === itemId);
+        if (item) {
+          const newQuantity = prompt('Enter new quantity:');
+          if (newQuantity !== null && !isNaN(newQuantity)) {
+            item.quantity = parseInt(newQuantity);
+            renderItems(filteredItems.length > 0 ? filteredItems : items);
+          }
+        }
+      }
+
+      // ... (rest of the functions remain unchanged)
+
+      // Initial rendering
+      renderItems(items);
+    </script>
+  </body>
+</html>
