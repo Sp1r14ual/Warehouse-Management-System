@@ -111,10 +111,7 @@
     </div>
 
     <script>
-      // Use let instead of const to allow reassignment
       let items = [];
-      // Array to store filtered items
-      let filteredItems = [];
 
       function renderItems(displayItems) {
         const itemList = document.getElementById('items');
@@ -132,62 +129,121 @@
             Shipper: ${item.shipper} <!-- Display shipper -->
           `;
 
-          const deleteButton = document.createElement('button');
-          deleteButton.textContent = 'Delete';
-          deleteButton.addEventListener('click', () => deleteItem(item.id));
+          const buttonsContainer = document.createElement('div');
 
-          const changeLocationButton = document.createElement('button');
-          changeLocationButton.textContent = 'Change Location';
-          changeLocationButton.addEventListener('click', () =>
+          const deleteButton = createButton('Delete', () =>
+            deleteItem(item.id)
+          );
+          const changeLocationButton = createButton('Change Location', () =>
             changeLocation(item.id)
           );
-
-          const changeQuantityButton = document.createElement('button');
-          changeQuantityButton.textContent = 'Change Quantity';
-          changeQuantityButton.addEventListener('click', () =>
+          const changeQuantityButton = createButton('Change Quantity', () =>
             changeQuantity(item.id)
           );
-
-          const changeWeightButton = document.createElement('button');
-          changeWeightButton.textContent = 'Change Weight';
-          changeWeightButton.addEventListener('click', () =>
+          const changeWeightButton = createButton('Change Weight', () =>
             changeWeight(item.id)
           );
-
-          const changeShelfLifeButton = document.createElement('button');
-          changeShelfLifeButton.textContent = 'Change Shelf Life';
-          changeShelfLifeButton.addEventListener('click', () =>
+          const changeShelfLifeButton = createButton('Change Shelf Life', () =>
             changeShelfLife(item.id)
           );
-
-          const changeShipperButton = document.createElement('button');
-          changeShipperButton.textContent = 'Change Shipper';
-          changeShipperButton.addEventListener('click', () =>
+          const changeShipperButton = createButton('Change Shipper', () =>
             changeShipper(item.id)
           );
+          const changeVendorCodeButton = createButton(
+            'Change Vendor Code',
+            () => changeVendorCode(item.id)
+          );
 
-          listItem.appendChild(deleteButton);
-          listItem.appendChild(changeLocationButton);
-          listItem.appendChild(changeQuantityButton);
-          listItem.appendChild(changeWeightButton);
-          listItem.appendChild(changeShelfLifeButton);
-          listItem.appendChild(changeShipperButton);
+          buttonsContainer.appendChild(deleteButton);
+          buttonsContainer.appendChild(changeLocationButton);
+          buttonsContainer.appendChild(changeQuantityButton);
+          buttonsContainer.appendChild(changeWeightButton);
+          buttonsContainer.appendChild(changeShelfLifeButton);
+          buttonsContainer.appendChild(changeShipperButton);
+          buttonsContainer.appendChild(changeVendorCodeButton);
 
+          listItem.appendChild(buttonsContainer);
           itemList.appendChild(listItem);
         });
+      }
+
+      function createButton(text, clickHandler) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.addEventListener('click', clickHandler);
+        return button;
+      }
+
+      function deleteItem(itemId) {
+        items = items.filter(item => item.id !== itemId);
+        renderItems(items);
+      }
+
+      function changeLocation(itemId) {
+        const item = items.find(item => item.id === itemId);
+        const newLocation = prompt('Enter new location:');
+        if (newLocation !== null) {
+          item.location = newLocation;
+          renderItems(items);
+        }
+      }
+
+      function changeQuantity(itemId) {
+        const item = items.find(item => item.id === itemId);
+        const newQuantity = prompt('Enter new quantity:');
+        if (newQuantity !== null) {
+          item.quantity = parseInt(newQuantity) || 0;
+          renderItems(items);
+        }
+      }
+
+      function changeWeight(itemId) {
+        const item = items.find(item => item.id === itemId);
+        const newWeight = prompt('Enter new weight:');
+        if (newWeight !== null) {
+          item.weight = parseFloat(newWeight) || 0;
+          renderItems(items);
+        }
+      }
+
+      function changeShelfLife(itemId) {
+        const item = items.find(item => item.id === itemId);
+        const newShelfLife = prompt('Enter new shelf life:');
+        if (newShelfLife !== null) {
+          item.shelfLife = parseInt(newShelfLife) || 0;
+          renderItems(items);
+        }
+      }
+
+      function changeShipper(itemId) {
+        const item = items.find(item => item.id === itemId);
+        const newShipper = prompt('Enter new shipper:');
+        if (newShipper !== null) {
+          item.shipper = newShipper;
+          renderItems(items);
+        }
+      }
+
+      function changeVendorCode(itemId) {
+        const item = items.find(item => item.id === itemId);
+        const newVendorCode = prompt('Enter new vendor code:');
+        if (newVendorCode !== null) {
+          item.vendorCode = newVendorCode;
+          renderItems(items);
+        }
       }
 
       function addItem() {
         const itemName = document.getElementById('itemName').value;
         const vendorCode = document.getElementById('vendorCode').value;
         const quantity =
-          parseInt(document.getElementById('quantity').value) || 0; // Ensure a valid number
-        const weight = parseFloat(document.getElementById('weight').value) || 0; // Ensure a valid number
+          parseInt(document.getElementById('quantity').value) || 0;
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
         const shelfLife =
-          parseInt(document.getElementById('shelfLife').value) || 0; // Ensure a valid number
-        const shipper = document.getElementById('shipper').value; // Get shipper directly
+          parseInt(document.getElementById('shelfLife').value) || 0;
+        const shipper = document.getElementById('shipper').value;
         const location =
-          document.getElementById('location').value || 'Default Location'; // Get location directly
+          document.getElementById('location').value || 'Default Location';
 
         const newItem = {
           id: Date.now(),
@@ -199,78 +255,10 @@
           shelfLife: shelfLife,
           shipper: shipper,
         };
+
         items.push(newItem);
-
-        // Update filteredItems array when a new item is added
-        filteredItems.push(newItem);
-
-        // Render either all items or filtered items based on the current state
-        renderItems(filteredItems.length > 0 ? filteredItems : items);
+        renderItems(items);
       }
-
-      function deleteItem(itemId) {
-        // Use filter to exclude the item with the specified ID
-        items = items.filter(item => item.id !== itemId);
-        filteredItems = filteredItems.filter(item => item.id !== itemId);
-        renderItems(filteredItems.length > 0 ? filteredItems : items);
-      }
-
-      function changeLocation(itemId) {
-        const item = items.find(item => item.id === itemId);
-        if (item) {
-          const newLocation = prompt('Enter new location:');
-          if (newLocation !== null) {
-            item.location = newLocation;
-            renderItems(filteredItems.length > 0 ? filteredItems : items);
-          }
-        }
-      }
-
-      function changeQuantity(itemId) {
-        const item = items.find(item => item.id === itemId);
-        if (item) {
-          const newQuantity = prompt('Enter new quantity:');
-          if (newQuantity !== null && !isNaN(newQuantity)) {
-            item.quantity = parseInt(newQuantity);
-            renderItems(filteredItems.length > 0 ? filteredItems : items);
-          }
-        }
-      }
-
-      function changeWeight(itemId) {
-        const item = items.find(item => item.id === itemId);
-        if (item) {
-          const newWeight = prompt('Enter new weight:');
-          if (newWeight !== null && !isNaN(newWeight)) {
-            item.weight = parseFloat(newWeight);
-            renderItems(filteredItems.length > 0 ? filteredItems : items);
-          }
-        }
-      }
-
-      function changeShelfLife(itemId) {
-        const item = items.find(item => item.id === itemId);
-        if (item) {
-          const newShelfLife = prompt('Enter new shelf life (days):');
-          if (newShelfLife !== null && !isNaN(newShelfLife)) {
-            item.shelfLife = parseInt(newShelfLife);
-            renderItems(filteredItems.length > 0 ? filteredItems : items);
-          }
-        }
-      }
-
-      function changeShipper(itemId) {
-        const item = items.find(item => item.id === itemId);
-        if (item) {
-          const newShipper = prompt('Enter new shipper:');
-          if (newShipper !== null) {
-            item.shipper = newShipper;
-            renderItems(filteredItems.length > 0 ? filteredItems : items);
-          }
-        }
-      }
-
-      // ... (rest of the functions remain unchanged)
 
       // Initial rendering
       renderItems(items);
