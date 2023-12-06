@@ -88,7 +88,13 @@
       <input type="number" id="weight" min="0" value="0" />
       <label for="shelfLife">Shelf Life (days):</label>
       <input type="number" id="shelfLife" min="0" value="0" />
+      <label for="shipper">Shipper:</label>
+      <input type="text" id="shipper" />
+      <label for="location">Location:</label>
+      <input type="text" id="location" value="Default Location" />
+      <!-- Default location -->
       <!-- Add more input fields for other item properties -->
+      <!-- Fix the button onclick attribute -->
       <button onclick="addItem()">Add Item</button>
     </div>
 
@@ -105,8 +111,8 @@
     </div>
 
     <script>
-      // Original array to store all items
-      const items = [];
+      // Use let instead of const to allow reassignment
+      let items = [];
       // Array to store filtered items
       let filteredItems = [];
 
@@ -122,7 +128,8 @@
             Location: ${item.location} -
             Quantity: ${item.quantity} -
             Weight: ${item.weight} lbs -
-            Shelf Life: ${item.shelfLife} days <!-- Display shelf life -->
+            Shelf Life: ${item.shelfLife} days -
+            Shipper: ${item.shipper} <!-- Display shipper -->
           `;
 
           const deleteButton = document.createElement('button');
@@ -132,7 +139,7 @@
           const changeLocationButton = document.createElement('button');
           changeLocationButton.textContent = 'Change Location';
           changeLocationButton.addEventListener('click', () =>
-            changeItemLocation(item.id)
+            changeLocation(item.id)
           );
 
           const changeQuantityButton = document.createElement('button');
@@ -153,11 +160,18 @@
             changeShelfLife(item.id)
           );
 
+          const changeShipperButton = document.createElement('button');
+          changeShipperButton.textContent = 'Change Shipper';
+          changeShipperButton.addEventListener('click', () =>
+            changeShipper(item.id)
+          );
+
           listItem.appendChild(deleteButton);
           listItem.appendChild(changeLocationButton);
           listItem.appendChild(changeQuantityButton);
           listItem.appendChild(changeWeightButton);
           listItem.appendChild(changeShelfLifeButton);
+          listItem.appendChild(changeShipperButton);
 
           itemList.appendChild(listItem);
         });
@@ -171,15 +185,19 @@
         const weight = parseFloat(document.getElementById('weight').value) || 0; // Ensure a valid number
         const shelfLife =
           parseInt(document.getElementById('shelfLife').value) || 0; // Ensure a valid number
+        const shipper = document.getElementById('shipper').value; // Get shipper directly
+        const location =
+          document.getElementById('location').value || 'Default Location'; // Get location directly
 
         const newItem = {
           id: Date.now(),
           name: itemName,
           vendorCode: vendorCode,
-          location: 'Default Location',
+          location: location,
           quantity: quantity,
           weight: weight,
           shelfLife: shelfLife,
+          shipper: shipper,
         };
         items.push(newItem);
 
@@ -190,12 +208,63 @@
         renderItems(filteredItems.length > 0 ? filteredItems : items);
       }
 
+      function deleteItem(itemId) {
+        // Use filter to exclude the item with the specified ID
+        items = items.filter(item => item.id !== itemId);
+        filteredItems = filteredItems.filter(item => item.id !== itemId);
+        renderItems(filteredItems.length > 0 ? filteredItems : items);
+      }
+
+      function changeLocation(itemId) {
+        const item = items.find(item => item.id === itemId);
+        if (item) {
+          const newLocation = prompt('Enter new location:');
+          if (newLocation !== null) {
+            item.location = newLocation;
+            renderItems(filteredItems.length > 0 ? filteredItems : items);
+          }
+        }
+      }
+
+      function changeQuantity(itemId) {
+        const item = items.find(item => item.id === itemId);
+        if (item) {
+          const newQuantity = prompt('Enter new quantity:');
+          if (newQuantity !== null && !isNaN(newQuantity)) {
+            item.quantity = parseInt(newQuantity);
+            renderItems(filteredItems.length > 0 ? filteredItems : items);
+          }
+        }
+      }
+
+      function changeWeight(itemId) {
+        const item = items.find(item => item.id === itemId);
+        if (item) {
+          const newWeight = prompt('Enter new weight:');
+          if (newWeight !== null && !isNaN(newWeight)) {
+            item.weight = parseFloat(newWeight);
+            renderItems(filteredItems.length > 0 ? filteredItems : items);
+          }
+        }
+      }
+
       function changeShelfLife(itemId) {
         const item = items.find(item => item.id === itemId);
         if (item) {
           const newShelfLife = prompt('Enter new shelf life (days):');
           if (newShelfLife !== null && !isNaN(newShelfLife)) {
             item.shelfLife = parseInt(newShelfLife);
+            renderItems(filteredItems.length > 0 ? filteredItems : items);
+          }
+        }
+      }
+
+      function changeShipper(itemId) {
+        const item = items.find(item => item.id === itemId);
+        if (item) {
+          const newShipper = prompt('Enter new shipper:');
+          if (newShipper !== null) {
+            item.shipper = newShipper;
             renderItems(filteredItems.length > 0 ? filteredItems : items);
           }
         }
