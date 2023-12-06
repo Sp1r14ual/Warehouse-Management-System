@@ -86,6 +86,8 @@
       <input type="number" id="quantity" min="0" value="0" />
       <label for="weight">Weight (lbs):</label>
       <input type="number" id="weight" min="0" value="0" />
+      <label for="shelfLife">Shelf Life (days):</label>
+      <input type="number" id="shelfLife" min="0" value="0" />
       <!-- Add more input fields for other item properties -->
       <button onclick="addItem()">Add Item</button>
     </div>
@@ -119,7 +121,8 @@
             Vendor Code: ${item.vendorCode} -
             Location: ${item.location} -
             Quantity: ${item.quantity} -
-            Weight: ${item.weight} lbs <!-- Display weight -->
+            Weight: ${item.weight} lbs -
+            Shelf Life: ${item.shelfLife} days <!-- Display shelf life -->
           `;
 
           const deleteButton = document.createElement('button');
@@ -144,10 +147,17 @@
             changeWeight(item.id)
           );
 
+          const changeShelfLifeButton = document.createElement('button');
+          changeShelfLifeButton.textContent = 'Change Shelf Life';
+          changeShelfLifeButton.addEventListener('click', () =>
+            changeShelfLife(item.id)
+          );
+
           listItem.appendChild(deleteButton);
           listItem.appendChild(changeLocationButton);
           listItem.appendChild(changeQuantityButton);
           listItem.appendChild(changeWeightButton);
+          listItem.appendChild(changeShelfLifeButton);
 
           itemList.appendChild(listItem);
         });
@@ -159,6 +169,8 @@
         const quantity =
           parseInt(document.getElementById('quantity').value) || 0; // Ensure a valid number
         const weight = parseFloat(document.getElementById('weight').value) || 0; // Ensure a valid number
+        const shelfLife =
+          parseInt(document.getElementById('shelfLife').value) || 0; // Ensure a valid number
 
         const newItem = {
           id: Date.now(),
@@ -167,6 +179,7 @@
           location: 'Default Location',
           quantity: quantity,
           weight: weight,
+          shelfLife: shelfLife,
         };
         items.push(newItem);
 
@@ -177,23 +190,12 @@
         renderItems(filteredItems.length > 0 ? filteredItems : items);
       }
 
-      function changeQuantity(itemId) {
+      function changeShelfLife(itemId) {
         const item = items.find(item => item.id === itemId);
         if (item) {
-          const newQuantity = prompt('Enter new quantity:');
-          if (newQuantity !== null && !isNaN(newQuantity)) {
-            item.quantity = parseInt(newQuantity);
-            renderItems(filteredItems.length > 0 ? filteredItems : items);
-          }
-        }
-      }
-
-      function changeWeight(itemId) {
-        const item = items.find(item => item.id === itemId);
-        if (item) {
-          const newWeight = prompt('Enter new weight:');
-          if (newWeight !== null && !isNaN(newWeight)) {
-            item.weight = parseFloat(newWeight);
+          const newShelfLife = prompt('Enter new shelf life (days):');
+          if (newShelfLife !== null && !isNaN(newShelfLife)) {
+            item.shelfLife = parseInt(newShelfLife);
             renderItems(filteredItems.length > 0 ? filteredItems : items);
           }
         }
