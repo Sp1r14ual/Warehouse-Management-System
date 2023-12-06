@@ -103,11 +103,26 @@
       <ul id="items"></ul>
     </div>
 
-    <div id="searchForm">
-      <!-- Form for searching items -->
+    <!-- <div id="searchForm">
       <label for="searchTerm">Search Term:</label>
       <input type="text" id="searchTerm" />
       <button onclick="searchItem()">Search</button>
+    </div> -->
+
+    <div id="searchForm">
+      <label for="searchTerm">Search Term:</label>
+      <input type="text" id="searchTerm" placeholder="Enter search term" />
+      <label for="searchCriteria">Search Criteria:</label>
+      <select id="searchCriteria">
+        <option value="itemName">Item Name</option>
+        <option value="vendorCode">Vendor Code</option>
+        <option value="quantity">Quantity</option>
+        <option value="weight">Weight</option>
+        <option value="shelfLife">Shelf Life</option>
+        <option value="shipper">Shipper</option>
+        <option value="location">Location</option>
+      </select>
+      <button onclick="searchItems()">Search</button>
     </div>
 
     <script>
@@ -270,6 +285,58 @@
 
         items.push(newItem);
         renderItems(items);
+      }
+
+      function searchItems() {
+        const searchTerm = document
+          .getElementById('searchTerm')
+          .value.toLowerCase();
+        const searchCriteria = document.getElementById('searchCriteria').value;
+
+        let filteredItems = items;
+
+        switch (searchCriteria) {
+          case 'itemName':
+            filteredItems = items.filter(item =>
+              item.name.toLowerCase().includes(searchTerm)
+            );
+            break;
+          case 'vendorCode':
+            filteredItems = items.filter(item =>
+              item.vendorCode.toLowerCase().includes(searchTerm)
+            );
+            break;
+          case 'quantity':
+            filteredItems = items.filter(item =>
+              item.quantity.toString().includes(searchTerm)
+            );
+            break;
+          case 'weight':
+            filteredItems = items.filter(item =>
+              item.weight.toString().includes(searchTerm)
+            );
+            break;
+          case 'shelfLife':
+            filteredItems = items.filter(item =>
+              item.shelfLife.toString().includes(searchTerm)
+            );
+            break;
+          case 'shipper':
+            filteredItems = items.filter(item =>
+              item.shipper.toLowerCase().includes(searchTerm)
+            );
+            break;
+          case 'location':
+            filteredItems = items.filter(item =>
+              item.location.toLowerCase().includes(searchTerm)
+            );
+            break;
+          default:
+            alert('Invalid search criteria');
+            break;
+        }
+
+        renderItems(filteredItems);
       }
 
       // Initial rendering
