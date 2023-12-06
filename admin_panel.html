@@ -131,8 +131,8 @@
 
           const buttonsContainer = document.createElement('div');
 
-          const deleteButton = createButton('Delete', () =>
-            deleteItem(item.id)
+          const writeOffButton = createButton('Write-Off', () =>
+            writeOffItem(item.id)
           );
           const changeLocationButton = createButton('Change Location', () =>
             changeLocation(item.id)
@@ -154,7 +154,7 @@
             () => changeVendorCode(item.id)
           );
 
-          buttonsContainer.appendChild(deleteButton);
+          buttonsContainer.appendChild(writeOffButton);
           buttonsContainer.appendChild(changeLocationButton);
           buttonsContainer.appendChild(changeQuantityButton);
           buttonsContainer.appendChild(changeWeightButton);
@@ -172,6 +172,18 @@
         button.textContent = text;
         button.addEventListener('click', clickHandler);
         return button;
+      }
+
+      function writeOffItem(itemId) {
+        const reason = prompt('Enter the reason for writing off:');
+        if (reason !== null) {
+          const confirmWriteOff = confirm(
+            `Are you sure you want to write off this item?\nReason: ${reason}`
+          );
+          if (confirmWriteOff) {
+            deleteItem(itemId);
+          }
+        }
       }
 
       function deleteItem(itemId) {
