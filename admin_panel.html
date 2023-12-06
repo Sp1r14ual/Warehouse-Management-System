@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Warehouse Admin Panel</title>
+    <title>Админ панель</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -77,46 +77,45 @@
   </head>
   <body>
     <div id="itemForm">
-      <!-- Form for adding a new item -->
-      <label for="itemName">Item Name:</label>
+      <label for="itemName">Название товара</label>
       <input type="text" id="itemName" />
-      <label for="vendorCode">Vendor Code:</label>
+      <label for="vendorCode">Артикул</label>
       <input type="text" id="vendorCode" />
-      <label for="quantity">Quantity:</label>
+      <label for="quantity">Количество товара</label>
       <input type="number" id="quantity" min="0" value="0" />
-      <label for="weight">Weight (lbs):</label>
+      <label for="weight">Вес (кг):</label>
       <input type="number" id="weight" min="0" value="0" />
-      <label for="shelfLife">Shelf Life (days):</label>
+      <label for="shelfLife">Срок хранения (дней)</label>
       <input type="number" id="shelfLife" min="0" value="0" />
-      <label for="shipper">Shipper:</label>
+      <label for="shipper">Поставщик</label>
       <input type="text" id="shipper" />
-      <label for="location">Location:</label>
-      <input type="text" id="location" value="Default Location" />
-      <!-- Default location -->
-      <!-- Add more input fields for other item properties -->
-      <!-- Fix the button onclick attribute -->
-      <button onclick="addItem()">Add Item</button>
+      <label for="location">Место на складе</label>
+      <input type="text" id="location" value="Место по умолчанию" />
+      <button onclick="addItem()">Добавить</button>
     </div>
 
     <div id="itemList">
-      <!-- Display list of items with delete functionality -->
       <ul id="items"></ul>
     </div>
 
     <div id="searchForm">
-      <label for="searchTerm">Search Term:</label>
-      <input type="text" id="searchTerm" placeholder="Enter search term" />
-      <label for="searchCriteria">Search Criteria:</label>
+      <label for="searchTerm">Поиск товара</label>
+      <input
+        type="text"
+        id="searchTerm"
+        placeholder="Введите данные для поиска"
+      />
+      <label for="searchCriteria">Критерий поиска:</label>
       <select id="searchCriteria">
-        <option value="itemName">Item Name</option>
-        <option value="vendorCode">Vendor Code</option>
-        <option value="quantity">Quantity</option>
-        <option value="weight">Weight</option>
-        <option value="shelfLife">Shelf Life</option>
-        <option value="shipper">Shipper</option>
-        <option value="location">Location</option>
+        <option value="itemName">Название товара</option>
+        <option value="vendorCode">Артикул</option>
+        <option value="quantity">Количество товара</option>
+        <option value="weight">Вес</option>
+        <option value="shelfLife">Срок хранения</option>
+        <option value="shipper">Поставщик</option>
+        <option value="location">Место на складе</option>
       </select>
-      <button onclick="searchItems()">Search</button>
+      <button onclick="searchItems()">Искать</button>
     </div>
 
     <script>
@@ -130,37 +129,38 @@
           const listItem = document.createElement('li');
           listItem.innerHTML = `
             <strong>${item.name}</strong> -
-            Vendor Code: ${item.vendorCode} -
-            Location: ${item.location} -
-            Quantity: ${item.quantity} -
-            Weight: ${item.weight} lbs -
-            Shelf Life: ${item.shelfLife} days -
-            Shipper: ${item.shipper} <!-- Display shipper -->
+            Артикул: ${item.vendorCode} -
+            Место на складе: ${item.location} -
+            Количество: ${item.quantity} -
+            Вес: ${item.weight} кг -
+            Срок хранения: ${item.shelfLife} дней -
+            Поставщик: ${item.shipper}
           `;
 
           const buttonsContainer = document.createElement('div');
 
-          const writeOffButton = createButton('Write-Off', () =>
+          const writeOffButton = createButton('Списать товар', () =>
             writeOffItem(item.id)
           );
-          const changeLocationButton = createButton('Change Location', () =>
-            changeLocation(item.id)
+          const changeLocationButton = createButton(
+            'Изменить место на складе',
+            () => changeLocation(item.id)
           );
-          const changeQuantityButton = createButton('Change Quantity', () =>
+          const changeQuantityButton = createButton('Изменить количество', () =>
             changeQuantity(item.id)
           );
-          const changeWeightButton = createButton('Change Weight', () =>
+          const changeWeightButton = createButton('Изменить вес', () =>
             changeWeight(item.id)
           );
-          const changeShelfLifeButton = createButton('Change Shelf Life', () =>
-            changeShelfLife(item.id)
+          const changeShelfLifeButton = createButton(
+            'Изменить срок хранения',
+            () => changeShelfLife(item.id)
           );
-          const changeShipperButton = createButton('Change Shipper', () =>
+          const changeShipperButton = createButton('Изменить поставщика', () =>
             changeShipper(item.id)
           );
-          const changeVendorCodeButton = createButton(
-            'Change Vendor Code',
-            () => changeVendorCode(item.id)
+          const changeVendorCodeButton = createButton('Изменить артикул', () =>
+            changeVendorCode(item.id)
           );
 
           buttonsContainer.appendChild(writeOffButton);
@@ -184,10 +184,10 @@
       }
 
       function writeOffItem(itemId) {
-        const reason = prompt('Enter the reason for writing off:');
+        const reason = prompt('Введите причину списания товара');
         if (reason !== null) {
           const confirmWriteOff = confirm(
-            `Are you sure you want to write off this item?\nReason: ${reason}`
+            `Вы уверены, что хотите списать товар?\nПричина: ${reason}`
           );
           if (confirmWriteOff) {
             deleteItem(itemId);
@@ -202,7 +202,7 @@
 
       function changeLocation(itemId) {
         const item = items.find(item => item.id === itemId);
-        const newLocation = prompt('Enter new location:');
+        const newLocation = prompt('Введите место на складе');
         if (newLocation !== null) {
           item.location = newLocation;
           renderItems(items);
@@ -211,7 +211,7 @@
 
       function changeQuantity(itemId) {
         const item = items.find(item => item.id === itemId);
-        const newQuantity = prompt('Enter new quantity:');
+        const newQuantity = prompt('Введите количество');
         if (newQuantity !== null) {
           item.quantity = parseInt(newQuantity) || 0;
           renderItems(items);
@@ -220,7 +220,7 @@
 
       function changeWeight(itemId) {
         const item = items.find(item => item.id === itemId);
-        const newWeight = prompt('Enter new weight:');
+        const newWeight = prompt('Введите вес');
         if (newWeight !== null) {
           item.weight = parseFloat(newWeight) || 0;
           renderItems(items);
@@ -229,7 +229,7 @@
 
       function changeShelfLife(itemId) {
         const item = items.find(item => item.id === itemId);
-        const newShelfLife = prompt('Enter new shelf life:');
+        const newShelfLife = prompt('Введите срок хранения');
         if (newShelfLife !== null) {
           item.shelfLife = parseInt(newShelfLife) || 0;
           renderItems(items);
@@ -238,7 +238,7 @@
 
       function changeShipper(itemId) {
         const item = items.find(item => item.id === itemId);
-        const newShipper = prompt('Enter new shipper:');
+        const newShipper = prompt('Введите поставщика');
         if (newShipper !== null) {
           item.shipper = newShipper;
           renderItems(items);
@@ -247,7 +247,7 @@
 
       function changeVendorCode(itemId) {
         const item = items.find(item => item.id === itemId);
-        const newVendorCode = prompt('Enter new vendor code:');
+        const newVendorCode = prompt('Введите артикул');
         if (newVendorCode !== null) {
           item.vendorCode = newVendorCode;
           renderItems(items);
@@ -264,7 +264,7 @@
           parseInt(document.getElementById('shelfLife').value) || 0;
         const shipper = document.getElementById('shipper').value;
         const location =
-          document.getElementById('location').value || 'Default Location';
+          document.getElementById('location').value || 'Место по умолчанию';
 
         const newItem = {
           id: Date.now(),
@@ -333,7 +333,6 @@
         renderItems(filteredItems);
       }
 
-      // Initial rendering
       renderItems(items);
     </script>
   </body>
